@@ -1,0 +1,11 @@
+{% if settings.enable_quickview %}
+<div class="add-to-link">
+  <div class="quickview-button">
+    <a href="javascript:void(0)" id="{{ product.handle }}" data-toggle="tooltip" data-placement="top" title="Select options" class="sca-qv-button harman_btn3">
+      <i class="fa fa-shopping-cart fa-1" aria-hidden="true"></i>
+      <span {% if settings.enable_multilang %}data-translate="product.quickview"{%endif%}>{{ 'product.quickview' | t }}</span>
+    </a>
+  </div>
+</div>
+{%endif%}
+{% include 'wishlist-product' %}

@@ -1,0 +1,186 @@
+{% comment %}
+Refined tags
+{% endcomment %}
+{% if current_tags == blank %}
+{% assign has_refined = false %}
+{% else %}
+{% assign has_refined = true %}
+{% endif %}
+
+<div class=" col-md-4 col-sm-4 col-xs-12" id="filter-sidebar">
+  {% for link in linklists.main-menu.links %}
+  {% assign link_title = link.title | downcase %}
+  {% if collection.description contains "HUNTING" %}
+  {% if link.title contains "HUNTING"  %}
+    <h3 style="font-family: Montserrat, sans-serif; font-weight: 500; margin-bottom:30px;">
+      {{collection.description}}
+    </h3>
+    <div id="collapsible-container" class="collapse-container">
+      {% for child_link in linklists[link.handle].links %}
+        <h3>
+          {% if linklists[child_link.handle] != empty %}
+            <span class="arrow arrow-r"></span>
+          {% endif %}
+          <a href="{{ child_link.url }}">
+            {% if settings.enable_multilang %}
+              <span class="lang1" style="font-weight: 500; font-size: 14px; font-family: Montserrat, sans-serif;">
+                {{ child_link.title | split: '|' | first }}
+              </span>
+              <span class="lang2" style="font-weight: 500; font-size: 14px; font-family: Montserrat, sans-serif;">
+                {{ child_link.title | split: '|' | last }}
+              </span>
+              {% else %}
+              <span>
+                {{ child_link.title | split: '|' | first }}
+              </span>
+            {% endif %}
+          </a>
+        </h3>
+        <div class="sub-menu-container">
+          {% if linklists[child_link.handle] != empty %}
+          <ul style="margin-left:5%; list-style-type:none;">
+            {% for child_link1 in linklists[child_link.handle].links %}
+            {% if linklists[child_link1.handle] != empty %}
+            <li class="parent dropdown-submenu {% if child_link1.active %}active{% endif %}">
+              <a class="dropdown-toggle" href="{{ child_link1.url }}">
+                {% if settings.enable_multilang %}
+                <span class="lang1">{{ child_link1.title | split: '|' | first }}</span>
+                <span class="lang2">{{ child_link1.title | split: '|' | last }}</span>
+                {% else %}
+                <span>{{ child_link1.title | split: '|' | first }}</span>
+                {% endif %}
+              </a>
+              <div class="dropdown-menu level3">
+                <ul>
+                  {% for child_link2 in linklists[child_link1.handle].links %}
+                  <li class="{% if child_link2.active %}active{% endif %}">
+                    <a href="{{ child_link2.url }}">
+                      {% if settings.enable_multilang %}
+                      <span class="lang1">{{ child_link2.title | split: '|' | first }}</span>
+                      <span class="lang2">{{ child_link2.title | split: '|' | last }}</span>
+                      {% else %}
+                      <span>{{ child_link2.title | split: '|' | first }}</span>
+                      {% endif %}
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+            {% else %}
+            <li class="{% if child_link1.active %}active{% endif %}">
+              <a class="" href="{{ child_link1.url }}">
+                {% if settings.enable_multilang %}
+                <span class="lang1">{{ child_link1.title | split: '|' | first }}</span>
+                <span class="lang2">{{ child_link1.title | split: '|' | last }}</span>
+                {% else %}
+                <span>{{ child_link1.title | split: '|' | first }}</span>
+                {% endif %}
+              </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% elsif link.title == collection.description %}
+    {% if link.title == "SHOP BY PRINT" %}
+    <h3 style="font-family: Montserrat, sans-serif; font-weight: 500; margin-bottom:30px;">
+      {{collection.description}}
+    </h3>
+    {% else %}
+    <h3 style="font-family: Montserrat, sans-serif; font-weight: 500; margin-bottom:30px;">
+      SHOP {{collection.description}}
+    </h3>
+    {% endif %}
+    <div id="collapsible-container" class="collapse-container">
+      {% for child_link in linklists[link.handle].links %}
+        <h3>
+          {% if linklists[child_link.handle] != empty %}
+            <span class="arrow arrow-r"></span>
+          {% endif %}
+          <a href="{{ child_link.url }}">
+            {% if settings.enable_multilang %}
+              <span class="lang1" style="font-weight: 500; font-size: 14px; font-family: Montserrat, sans-serif;">
+                {{ child_link.title | split: '|' | first }}
+              </span>
+              <span class="lang2" style="font-weight: 500; font-size: 14px; font-family: Montserrat, sans-serif;">
+                {{ child_link.title | split: '|' | last }}
+              </span>
+              {% else %}
+              <span>
+                {{ child_link.title | split: '|' | first }}
+              </span>
+            {% endif %}
+          </a>
+        </h3>
+        <div class="sub-menu-container">
+          {% if linklists[child_link.handle] != empty %}
+          <ul style="margin-left:5%; list-style-type:none;">
+            {% for child_link1 in linklists[child_link.handle].links %}
+            {% if linklists[child_link1.handle] != empty %}
+            <li class="parent dropdown-submenu {% if child_link1.active %}active{% endif %}">
+              <a class="dropdown-toggle" href="{{ child_link1.url }}">
+                {% if settings.enable_multilang %}
+                <span class="lang1">{{ child_link1.title | split: '|' | first }}</span>
+                <span class="lang2">{{ child_link1.title | split: '|' | last }}</span>
+                {% else %}
+                <span>{{ child_link1.title | split: '|' | first }}</span>
+                {% endif %}
+              </a>
+              <div class="dropdown-menu level3">
+                <ul>
+                  {% for child_link2 in linklists[child_link1.handle].links %}
+                  <li class="{% if child_link2.active %}active{% endif %}">
+                    <a class="" href="{{ child_link2.url }}">
+                      {% if settings.enable_multilang %}
+                      <span class="lang1">{{ child_link2.title | split: '|' | first }}</span>
+                      <span class="lang2">{{ child_link2.title | split: '|' | last }}</span>
+                      {% else %}
+                      <span>{{ child_link2.title | split: '|' | first }}</span>
+                      {% endif %}
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+            {% else %}
+            <li class="{% if child_link1.active %}active{% endif %}">
+              <a class="" href="{{ child_link1.url }}">
+                {% if settings.enable_multilang %}
+                <span class="lang1">{{ child_link1.title | split: '|' | first }}</span>
+                <span class="lang2">{{ child_link1.title | split: '|' | last }}</span>
+                {% else %}
+                <span>{{ child_link1.title | split: '|' | first }}</span>
+                {% endif %}
+              </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div>
+      {% include 'filter-sub-menu', products=collection.products, best_seller_collection = best_seller%}
+    </div>
+  {% endif %}
+  {% endfor %}
+</div>
+<script>
+  $('#collapsible-container').collapsible({
+  	accordion: false,
+  	accordionUpSpeed: 400,
+  	accordionDownSpeed: 400,
+  	collapseSpeed: 400,
+  	contentOpen: null,
+  	arrowRclass: 'arrow-r',
+  	arrowDclass: 'arrow-d',
+  	animate: true
+  });
+</script>

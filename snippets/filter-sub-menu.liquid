@@ -1,0 +1,212 @@
+<div class="filter-by-price">
+  <h3 class="sub-filter-menu-title"> PRICE </h3>
+  <div class="checkbox">
+    <input type="checkbox" onclick="handleClick(value);" class="input-assumpte" id="price" value="Below 10$"/>
+    <label for="price" class="price-value">Below $10</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" onclick="handleClick(value);" class="input-assumpte" id="price_20" value="$20-$30"/>
+    <label for="price_20" class="price-value">$20-$30</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" onclick="handleClick(value);" class="input-assumpte" id="price_30" value="$30-$40"/>
+    <label for="price_30" class="price-value">$30-$40</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" onclick="handleClick(value);" class="input-assumpte" id="price_40" value="$40-$50"/>
+    <label for="price_40" class="price-value">$40-$50</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" onclick="handleClick(value);" class="input-assumpte" id="price_50" value="Above $50"/>
+    <label for="price_50" class="price-value">Above $50</label>
+  </div>
+</div>
+<div class="filter-by-size">
+  <h3 class="sub-filter-menu-title"> SIZE </h3>
+  <div class="filter-by-sizes row">
+    {% for product in products %}
+      {% for variant in product.variants %}
+        {% assign value = variant.option1 %}
+        {% unless values contains value %}
+          {% assign values = values | join: ',' %}
+          {% assign values = values | append: ',' | append: value %}
+          {% assign values = values | split: ',' %}
+          {% if value != "Default Title" %}
+            {% if value == "12 months"%}
+              <div class="col-sm-4 col-md-3 col-xs-3 size-div 12-months">
+                <ul class="size-button">
+                  <li class="size-list" value="{{value}}" onclick="handleSize('{{value}}')" id="{{value}}">{{'12M'}}</li>
+                </ul>
+              </div>
+            {% elsif value contains '/' %}
+              {% assign exchangeValue = value %}
+              {% capture  sizeValue%} {{ exchangeValue| replace: '/', '-' }} {% endcapture %}
+              {% capture subClassName %} {{ 'size-' | append: sizeValue }} {% endcapture %}
+              {% capture sizeClassName %} {{ subClassName| replace: ' ', '' }} {% endcapture %}
+              <div class="col-sm-4 col-md-3 col-xs-3 size-div {{sizeClassName}}">
+                <ul class="size-button">
+                  <li class="size-list" value="{{sizeClassName}}" onclick="handleSize('{{value}}')" id="{{value}}">{{value}}</li>
+                </ul>
+              </div>
+            {%else %}
+              <div class="col-sm-4 col-md-3 col-xs-3 size-div size-{{value}}">
+                <ul class="size-button">
+                  <li class="size-list" value="{{value}}" onclick="handleSize('{{value}}')" id="{{value}}">{{value}}</li>
+                </ul>
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+<div class="shop-by-print">
+  <h3 class="sub-filter-menu-title"> SHOP BY PRINT </h3>
+  {% for link in linklists.main-menu.links %}
+    {% if link.title == "SHOP BY PRINT" %}
+      {% for child_link in linklists[link.handle].links %}
+        {% if child_link.title == "SHOP BY  PRINT" %}
+          {% for child_link1 in linklists[child_link.handle].links %}
+            <ul class="shop-by-prints">
+              <li>
+                <a href="{{child_link1.url}}">
+                  <div class="sub-print-menu">
+                    <img src="https://cdn.shopify.com/s/files/1/2571/3660/files/favicon-32x32.png?14889430919202459869">
+                    {{child_link1.title}}
+                  </div>
+                </a>
+              </li>
+            </ul>
+          {% endfor %}
+        {% elsif child_link.title == "CLASSIC COLORS" %}
+          <ul class="shop-by-prints">
+            <li>
+              <a href="{{child_link.url}}">
+                <div class="sub-print-menu">
+                  <img src="https://cdn.shopify.com/s/files/1/2571/3660/files/favicon-32x32.png?14889430919202459869">
+                  SOLID COLORS
+                </div>
+              </a>
+            </li>
+          </ul>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</div>
+<div class="best-seller">
+  <h3 class="sub-filter-menu-title"> BEST SELLER </h3>
+  <ul class="best-sellers">
+    {% for product in best_seller_collection.products %}
+      <li class="item best-seller-title" id="best-seller-{{product.id}}">
+        <a href="{{product.url}}" title="{{product.title}}" class="best-seller-product-image">
+          <img src="{{product.images[0] | product_img_url: 'small'}}" alt="{{product.title}}" >
+        </a>
+        <div class="best-seller-product-inner">
+          <p class="best-seller-product-name">
+            <a href="{{product.url}}">{{ product.title }}</a>
+          </p>
+          <div class="cart-collateral">
+            <span class="old-price"> {{ product.compare_at_price_min | money }}</span>
+            <span class="price">{{ product.price_min | money }}</span>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<script>
+$('input.input-assumpte').on('change', function() {
+  $('input.input-assumpte').not(this).prop('checked', false);
+});
+
+function makeQueryStringUrl() {
+  return Object.keys(Shopify.queryParams).map(function(k) {
+    return k + '=' + Shopify.queryParams[k];
+  }).join('&');
+}
+
+function handleClick(val) {
+  var checkFlag = $('.input-assumpte').is(':checked');
+  if(checkFlag) {
+    switch (val) {
+      case 'Below 10$':
+      Shopify.queryParams.max_price = 10;
+      Shopify.queryParams.min_price = 0;
+      break;
+      case '$20-$30':
+      Shopify.queryParams.min_price = 20;
+      Shopify.queryParams.max_price = 30;
+      break;
+      case '$30-$40':
+      Shopify.queryParams.min_price = 30;
+      Shopify.queryParams.max_price = 40;
+      break;
+      case '$40-$50':
+      Shopify.queryParams.min_price = 40;
+      Shopify.queryParams.max_price = 50;
+      break;
+      case 'Above $50':
+      Shopify.queryParams.min_price = 50;
+      Shopify.queryParams.max_price = 1000;
+      break;
+    }
+    location.search = makeQueryStringUrl();
+  } else {
+    delete Shopify.queryParams['min_price'];
+    delete Shopify.queryParams['max_price'];
+    location.search = makeQueryStringUrl();
+  }
+}
+var sizes = [];
+var removeSize = '';
+function handleSize(val) {
+  var jqueryClass = '';
+  var index = 0;
+
+  // get jQuery class name
+  if (val === "12 months") {
+    jqueryClass = '.12-months';
+    val = "12-months"
+  } else {
+    if (val.includes('/') === true) {
+      var changeValue = val.replace('/', '-');
+      jqueryClass = '.size-'+changeValue;
+    } else {
+      jqueryClass = '.size-'+val;
+    }
+  }
+
+  // set style
+  if ( Shopify.queryParams.sizefilter !== undefined ) {
+    sizes = Shopify.queryParams.sizefilter.split(',');
+  }
+  index = sizes.indexOf(val);
+  if (index === -1) {
+    sizes.push(val);
+    $(jqueryClass).css('border', '4px solid #97bd61');
+    if (Shopify.queryParams.sizefilter === undefined) {
+      Shopify.queryParams.sizefilter = val;
+    } else {
+      Shopify.queryParams.sizefilter = Shopify.queryParams.sizefilter.concat(',', val);
+    }
+  } else {
+    sizes.splice(index, 1);
+    $(jqueryClass).css('border', '4px solid #e0dcdc');
+    if (Shopify.queryParams.sizefilter.indexOf(val) === 0) {
+      if (Shopify.queryParams.sizefilter.indexOf(',') > -1 ) {
+        removeSize = val + ',';
+        Shopify.queryParams.sizefilter = Shopify.queryParams.sizefilter.replace(removeSize, '');
+      } else {
+        delete Shopify.queryParams['sizefilter'];
+      }
+    } else {
+      removeSize = ',' + val;
+      Shopify.queryParams.sizefilter = Shopify.queryParams.sizefilter.replace(removeSize, '');
+    }
+
+  }
+  location.search = makeQueryStringUrl();
+}
+</script>
